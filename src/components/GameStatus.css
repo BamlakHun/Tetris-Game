@@ -1,0 +1,24 @@
+.GameStatus {
+  position: absolute;
+  width: 22vw;
+  list-style-type: none; /* since it is a list and for a better look not having them is perfereable */
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.GameStatus__left {
+  right: 0;
+  top: 22vh;
+  text-align: left;
+}
+
+.GameStatus__right {
+  right: 0;
+  bottom: 0;
+  text-align: left;
+}
+
+.GameStatus .value {
+  font-size: 1.8rem;
+  margin-bottom: 0.2em;
+  color: rgba(255, 255, 255, 1);
+}
