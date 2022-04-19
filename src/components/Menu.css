@@ -1,0 +1,15 @@
+.Button {
+  padding: 40px, 80px;
+  font-size: 2em;
+  border: radius 20px;
+  border: none;
+  box-shadow: rgb grey;
+  cursor: pointer;
+}
+.Menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  z-index: 100;
+}

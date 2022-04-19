@@ -1,2 +1,2 @@
 # Tetris-Game
-Created with CodeSandbox
+JavaScript, HTML, CSS with React Framwork
