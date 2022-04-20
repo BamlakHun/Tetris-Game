@@ -2,6 +2,7 @@ import "./Tetris.css";
 
 import Previews from "/src/components/Previews";
 import Board from "/src/components/Board";
+import GameController from "/src/components/GameController";
 import GameStatus from "/src/components/GameStatus";
 
 import { useBoard } from "/src/hooks/useBoard";
@@ -24,6 +25,13 @@ const Tetris = ({ rows, columns, setGameOver }) => {
       <Board board={board} />
       <GameStatus gameStatus={gameStatus} />
       <Previews tetrominoes={player.tetrominoes} />
+      <GameController
+        board={board}
+        gameStatus={gameStatus}
+        player={player}
+        setGameOver={setGameOver}
+        setPlayer={setPlayer}
+      />
     </div>
   );
 };
