@@ -68,7 +68,8 @@ export const randomTetromino = () => {
 };
 
 export const rotate = ({ piece, direction }) => {
-  // Transpose rows and columns
+  // Transpose rows and columns a piece in the dirtection of we rotating to
+
   const newPiece = piece.map((_, index) =>
     piece.map((column) => column[index])
   );

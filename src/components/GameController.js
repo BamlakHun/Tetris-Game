@@ -1,3 +1,7 @@
+import "./GameController.css";
+
+import { Action, actionForKey } from "/src/utilities/Input";
+import { playerController } from "/src/utilities/PlayerController";
 const GameController = ({
   board,
   gameStatus,
@@ -7,12 +11,27 @@ const GameController = ({
 }) => {
   //control key up
   const onKeyUp = ({ code }) => {
-    console.log(`onKeyUp ${code}`);
+    const action = actionForKey(code); // more generalize
+    //if(code == "KeyQ"){ // if key Q in placed quit back to menu
+    if (action === Action.Quit) {
+      setGameOver(true);
+    }
   };
 
   // control key down
   const onKeyDown = ({ code }) => {
-    console.log(`onKeyDown ${code}`);
+    const action = actionForKey(code);
+    handleInput({ action });
+  };
+
+  const handleInput = ({ action }) => {
+    playerController({
+      action,
+      board,
+      player,
+      setPlayer,
+      setGameOver
+    });
   };
   return (
     <input
