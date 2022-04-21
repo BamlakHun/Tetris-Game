@@ -43,16 +43,17 @@ export const movePlayer = ({ delta, position, shape, board }) => {
     position: desiredNextPosition,
     shape
   });
-  // make sure we are inside the board
+  // makes sure we are inside the board
   const preventMove = !isOnBoard || (isOnBoard && collided);
   const nextPosition = preventMove ? position : desiredNextPosition;
 
   const isMovingDown = delta.row > 0; //
-  // yif collided or not onboard reset with new tetromino
+  // if collided or not onboard reset with new piece
   const isHit = isMovingDown && (collided || !isOnBoard);
 
   return { collided: isHit, nextPosition };
 };
+
 const attemptMovement = ({ board, action, player, setPlayer, setGameOver }) => {
   const delta = { row: 0, column: 0 };
   let isFastDropping = false;

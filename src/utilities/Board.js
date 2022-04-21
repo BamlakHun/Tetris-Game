@@ -1,5 +1,6 @@
 import { defaultCell } from "/src/utilities/Cell";
 import { transferToBoard } from "/src/utilities/Tetrominoes";
+import { movePlayer } from "/src/utilities/PlayerController";
 
 export const buildBoard = ({ rows, columns }) => {
   // take the rows ans columns
@@ -12,23 +13,82 @@ export const buildBoard = ({ rows, columns }) => {
     size: { rows, columns }
   };
 };
-//  exportb functions
+
+const findDropPosition = ({ board, position, shape }) => {
+  let max = board.size.rows - position.row + 1;
+  let row = 0;
+
+  for (let i = 0; i < max; i++) {
+    const delta = { row: i, column: 0 };
+    const result = movePlayer({ delta, position, shape, board });
+    const { collided } = result; // check colusion
+
+    if (collided) {
+      break;
+    }
+
+    row = position.row + i;
+  }
+
+  return { ...position, row };
+};
+//  export functions
 export const nextBoard = ({ board, player, resetPlayer, addLinesCleared }) => {
   const { tetromino, position } = player;
 
-  // Copy and clear spaces used by pieces that
-  // hadn't collided and occupied spaces permanently
-  // if it is occupied keep it, we only require to clear it
   let rows = board.rows.map((row) =>
     row.map((cell) => (cell.occupied ? cell : { ...defaultCell }))
   );
-  rows = transferToBoard({
-    className: tetromino.className,
-    isOccupied: player.isFastDropping,
+
+  const dropPosition = findDropPosition({
+    // keep moving down till colusion
+    board,
     position,
+    shape: tetromino.shape
+  });
+
+  // Placing a ghost/replica
+  const className = `${tetromino.className} ${
+    player.isFastDropping ? "" : "ghost"
+  }`;
+  // the ghost or replica of the pieses
+  rows = transferToBoard({
+    className,
+    isOccupied: player.isFastDropping,
+    position: dropPosition,
     rows,
     shape: tetromino.shape
   });
+
+  // status of the game
+  // clear the raw
+
+  if (!player.isFastDropping) {
+    rows = transferToBoard({
+      className: tetromino.className,
+      isOccupied: player.collided,
+      position,
+      rows,
+      shape: tetromino.shape
+    });
+  }
+
+  const blankRow = rows[0].map((_) => ({ ...defaultCell }));
+  let linesCleared = 0; // check cleared line
+  rows = rows.reduce((acc, row) => {
+    if (row.every((column) => column.occupied)) {
+      linesCleared++;
+      acc.unshift([...blankRow]);
+    } else {
+      acc.push(row);
+    }
+
+    return acc;
+  }, []);
+
+  if (linesCleared > 0) {
+    addLinesCleared(linesCleared);
+  }
   // If we collided, reset the player!
   if (player.collided || player.isFastDropping) {
     resetPlayer();
@@ -39,6 +99,7 @@ export const nextBoard = ({ board, player, resetPlayer, addLinesCleared }) => {
     size: { ...board.size }
   };
 };
+
 export const hasCollision = ({ board, position, shape }) => {
   for (let y = 0; y < shape.length; y++) {
     const row = y + position.row;
